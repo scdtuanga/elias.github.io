@@ -16,42 +16,47 @@
     });
   });
 
-  // Spider web background (follows cursor, or drifts to random position when idle)
+  // Spider web: auto-moves around; when cursor enters the web it connects (web follows cursor)
   var canvas = document.getElementById('particles-bg');
   if (!canvas) return;
 
   var ctx = canvas.getContext('2d');
-  var mouse = { x: 0, y: 0 };
+  var mouse = { x: -9999, y: -9999 };
   var center = { x: 0, y: 0 };
   var target = { x: 0, y: 0 };
   var numRadials = 14;
   var numRings = 6;
   var lerpSpeed = 0.06;
   var maxRadius = 0;
-  var lastMove = 0;
-  var idleDelay = 2500;
+  var connectRadius = 0;   // when cursor is within this distance of center, web connects
   var nextRandomAt = 0;
+  var reachThreshold = 40; // pick new target when this close to drift target
 
   function randomPosition() {
-    var margin = maxRadius * 0.3;
+    var margin = maxRadius * 0.25;
     return {
       x: margin + Math.random() * (canvas.width - 2 * margin),
       y: margin + Math.random() * (canvas.height - 2 * margin)
     };
   }
 
+  function dist(a, b) {
+    var dx = a.x - b.x;
+    var dy = a.y - b.y;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
   function resize() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     maxRadius = Math.max(canvas.width, canvas.height) * 0.65;
+    connectRadius = maxRadius * 0.4; // connect when cursor is inside inner part of web
     var rnd = randomPosition();
     center.x = rnd.x;
     center.y = rnd.y;
-    mouse.x = rnd.x;
-    mouse.y = rnd.y;
     target.x = rnd.x;
     target.y = rnd.y;
-    nextRandomAt = Date.now() + idleDelay;
+    nextRandomAt = Date.now() + 2000;
   }
 
   function lerp(a, b, t) {
@@ -61,21 +66,25 @@
   document.addEventListener('mousemove', function (e) {
     mouse.x = e.clientX;
     mouse.y = e.clientY;
-    target.x = mouse.x;
-    target.y = mouse.y;
-    lastMove = Date.now();
-    nextRandomAt = lastMove + idleDelay;
   });
 
   function drawWeb() {
     if (!ctx || !canvas.width || !canvas.height) return;
 
     var now = Date.now();
-    if (now >= nextRandomAt) {
-      var rnd = randomPosition();
-      target.x = rnd.x;
-      target.y = rnd.y;
-      nextRandomAt = now + idleDelay;
+    var d = dist(mouse, center);
+    var connected = d < connectRadius;
+
+    if (connected) {
+      target.x = mouse.x;
+      target.y = mouse.y;
+    } else {
+      if (dist(center, target) < reachThreshold || now >= nextRandomAt) {
+        var rnd = randomPosition();
+        target.x = rnd.x;
+        target.y = rnd.y;
+        nextRandomAt = now + 1500 + Math.random() * 1500;
+      }
     }
 
     center.x = lerp(center.x, target.x, lerpSpeed);
