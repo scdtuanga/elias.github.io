@@ -345,3 +345,42 @@ body {
 .footer-copy:hover {
   color: #c17f59;
 }
+
+.music-toggle {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  z-index: 10;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 2px solid #d4cfc8;
+  background: #fff;
+  color: #5c5349;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.music-toggle:hover {
+  color: #c17f59;
+  border-color: #c17f59;
+  background: #f5f1eb;
+}
+.music-icon {
+  position: absolute;
+}
+.music-icon--off {
+  opacity: 1;
+}
+.music-icon--on {
+  opacity: 0;
+}
+.music-toggle.is-playing .music-icon--off {
+  opacity: 0;
+}
+.music-toggle.is-playing .music-icon--on {
+  opacity: 1;
+}
