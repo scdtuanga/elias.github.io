@@ -276,7 +276,9 @@ body {
 }
 
 .stack-tag {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
   padding: 0.35rem 0.75rem;
   background: #ebe6e0;
   border: none;
@@ -284,6 +286,12 @@ body {
   font-size: 0.8rem;
   font-weight: 600;
   color: #2d2a26;
+}
+
+.stack-icon {
+  width: 1.15rem;
+  height: 1.15rem;
+  flex-shrink: 0;
 }
 
 /* Footer */
