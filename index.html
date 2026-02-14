@@ -14,9 +14,10 @@
 <body>
   <canvas class="particles-bg" id="particles-bg" aria-hidden="true"></canvas>
 
-  <!-- Nhạc nền: đặt file mp3 cùng thư mục (vd: music.mp3) và đổi src bên dưới -->
-  <audio id="bg-music" loop preload="metadata">
+  <!-- Nhạc nền: đặt file music.mp3 cùng thư mục, hoặc dùng nhạc mặc định bên dưới -->
+  <audio id="bg-music" loop preload="auto" playsinline>
     <source src="music.mp3" type="audio/mpeg">
+    <source src="https://download.samplelib.com/mp3/sample-6s.mp3" type="audio/mpeg">
   </audio>
   <button type="button" class="music-toggle" id="music-toggle" aria-label="Bật/tắt nhạc nền" title="Nhạc nền">
     <span class="music-icon music-icon--on" aria-hidden="true">♪</span>
@@ -63,8 +64,8 @@
           Là một máy chủ dựa theo lối chơi ECO Sur , đã bị bỏ hoang nhiều tháng... sẽ comback vào 1 ngày nào đó
         </p>
         <div class="card-actions">
-          <a href="#" class="btn btn--dark">dsc.gg/ckenetwork</a>
-          <button type="button" class="btn btn--outline" data-copy="dsc.gg/ckenetwork">COPY DISCORD</button>
+          <a href="#" class="btn btn--dark">mc.seal.io.vn</a>
+          <button type="button" class="btn btn--outline" data-copy="mc.seal.io.vn">COPY IP</button>
         </div>
       </article>
 
@@ -77,14 +78,14 @@
       </article>
 
       <article class="card" id="gioi-thieu">
-        <h2 class="card-title">Giới thiệu</h2>
+        <h2 class="card-title">giới thiệu</h2>
         <p class="card-desc">
           là một thằng PC KIDS ,t đã học được rất nhiều thứ kể cả tự hủy chiếc PC của chính mình.
         </p>
       </article>
 
       <article class="card card--stack" id="du-an">
-        <h2 class="card-title">Stack</h2>
+        <h2 class="card-title">stack</h2>
         <div class="stack-tags">
           <span class="stack-tag">
             <img class="stack-icon" src="https://cdn.simpleicons.org/javascript/F7DF1E" alt="JavaScript" width="20" height="20" loading="lazy">
