@@ -5,11 +5,20 @@
   var bgMusic = document.getElementById('bg-music');
   var musicToggle = document.getElementById('music-toggle');
   if (bgMusic && musicToggle) {
+    bgMusic.volume = 0.4;
     musicToggle.addEventListener('click', function () {
       if (bgMusic.paused) {
-        bgMusic.play().catch(function () { /* autoplay bị chặn thì bỏ qua */ });
+        var p = bgMusic.play();
+        if (p && typeof p.then === 'function') {
+          p.then(function () {
+            musicToggle.classList.add('is-playing');
+          }).catch(function () {});
+        } else {
+          musicToggle.classList.add('is-playing');
+        }
       } else {
         bgMusic.pause();
+        musicToggle.classList.remove('is-playing');
       }
     });
     bgMusic.addEventListener('play', function () {
