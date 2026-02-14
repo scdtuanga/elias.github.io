@@ -16,86 +16,91 @@
     });
   });
 
-  // Particle background
+  // Spider web background (follows cursor)
   var canvas = document.getElementById('particles-bg');
   if (!canvas) return;
 
   var ctx = canvas.getContext('2d');
-  var particles = [];
-  var particleCount = 60;
-  var connectionDistance = 120;
-  var colors = [
-    'rgba(34, 211, 238, 0.6)',
-    'rgba(103, 232, 249, 0.4)',
-    'rgba(99, 102, 241, 0.35)',
-    'rgba(148, 163, 184, 0.25)'
-  ];
+  var mouse = { x: 0, y: 0 };
+  var center = { x: 0, y: 0 };
+  var numRadials = 14;
+  var numRings = 6;
+  var lerpSpeed = 0.06;
+  var maxRadius = 0;
 
   function resize() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    initParticles();
+    maxRadius = Math.max(canvas.width, canvas.height) * 0.65;
+    center.x = canvas.width * 0.5;
+    center.y = canvas.height * 0.5;
+    mouse.x = center.x;
+    mouse.y = center.y;
   }
 
-  function initParticles() {
-    particles = [];
-    for (var i = 0; i < particleCount; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.4,
-        vy: (Math.random() - 0.5) * 0.4,
-        r: Math.random() * 1.5 + 0.5,
-        color: colors[Math.floor(Math.random() * colors.length)]
-      });
-    }
+  function lerp(a, b, t) {
+    return a + (b - a) * t;
   }
 
-  function drawParticle(p) {
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-    ctx.fillStyle = p.color;
-    ctx.fill();
-  }
+  document.addEventListener('mousemove', function (e) {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  });
 
-  function drawConnections() {
-    for (var i = 0; i < particles.length; i++) {
-      for (var j = i + 1; j < particles.length; j++) {
-        var dx = particles[i].x - particles[j].x;
-        var dy = particles[i].y - particles[j].y;
-        var dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < connectionDistance) {
-          var alpha = (1 - dist / connectionDistance) * 0.15;
-          ctx.beginPath();
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.strokeStyle = 'rgba(34, 211, 238, ' + alpha + ')';
-          ctx.lineWidth = 0.5;
-          ctx.stroke();
-        }
-      }
-    }
-  }
-
-  function update() {
+  function drawWeb() {
     if (!ctx || !canvas.width || !canvas.height) return;
+
+    center.x = lerp(center.x, mouse.x, lerpSpeed);
+    center.y = lerp(center.y, mouse.y, lerpSpeed);
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    for (var i = 0; i < particles.length; i++) {
-      var p = particles[i];
-      p.x += p.vx;
-      p.y += p.vy;
-      if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-      if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-      p.x = Math.max(0, Math.min(canvas.width, p.x));
-      p.y = Math.max(0, Math.min(canvas.height, p.y));
-      drawParticle(p);
+    var cx = center.x;
+    var cy = center.y;
+    var stepAngle = (Math.PI * 2) / numRadials;
+
+    // Radial lines (spider web spokes)
+    ctx.strokeStyle = 'rgba(34, 211, 238, 0.14)';
+    ctx.lineWidth = 0.6;
+    for (var r = 0; r < numRadials; r++) {
+      var angle = r * stepAngle;
+      var ex = cx + maxRadius * Math.cos(angle);
+      var ey = cy + maxRadius * Math.sin(angle);
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(ex, ey);
+      ctx.stroke();
     }
-    drawConnections();
+
+    // Concentric rings (web spirals)
+    ctx.strokeStyle = 'rgba(103, 232, 249, 0.1)';
+    ctx.lineWidth = 0.5;
+    for (var ring = 1; ring <= numRings; ring++) {
+      var radius = (maxRadius / (numRings + 1)) * ring;
+      ctx.beginPath();
+      for (var r = 0; r <= numRadials; r++) {
+        var angle = r * stepAngle;
+        var px = cx + radius * Math.cos(angle);
+        var py = cy + radius * Math.sin(angle);
+        if (r === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.stroke();
+    }
+
+    // Center dot (spider / anchor)
+    ctx.beginPath();
+    ctx.arc(cx, cy, 2.5, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(34, 211, 238, 0.35)';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(34, 211, 238, 0.25)';
+    ctx.lineWidth = 0.8;
+    ctx.stroke();
   }
 
   function loop() {
-    update();
+    drawWeb();
     requestAnimationFrame(loop);
   }
 
