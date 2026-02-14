@@ -1,6 +1,25 @@
 (function () {
   'use strict';
 
+  // Nhạc nền (bật/tắt bằng nút)
+  var bgMusic = document.getElementById('bg-music');
+  var musicToggle = document.getElementById('music-toggle');
+  if (bgMusic && musicToggle) {
+    musicToggle.addEventListener('click', function () {
+      if (bgMusic.paused) {
+        bgMusic.play().catch(function () { /* autoplay bị chặn thì bỏ qua */ });
+      } else {
+        bgMusic.pause();
+      }
+    });
+    bgMusic.addEventListener('play', function () {
+      musicToggle.classList.add('is-playing');
+    });
+    bgMusic.addEventListener('pause', function () {
+      musicToggle.classList.remove('is-playing');
+    });
+  }
+
   // Copy to clipboard
   document.querySelectorAll('[data-copy]').forEach(function (btn) {
     btn.addEventListener('click', function () {
