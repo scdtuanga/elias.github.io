@@ -14,6 +14,15 @@
 <body>
   <canvas class="particles-bg" id="particles-bg" aria-hidden="true"></canvas>
 
+  <!-- Nhạc nền: đặt file mp3 cùng thư mục (vd: music.mp3) và đổi src bên dưới -->
+  <audio id="bg-music" loop preload="metadata">
+    <source src="music.mp3" type="audio/mpeg">
+  </audio>
+  <button type="button" class="music-toggle" id="music-toggle" aria-label="Bật/tắt nhạc nền" title="Nhạc nền">
+    <span class="music-icon music-icon--on" aria-hidden="true">♪</span>
+    <span class="music-icon music-icon--off" aria-hidden="true">⊘</span>
+  </button>
+
   <header class="header" role="banner">
     <div class="header-block header-title" aria-label="Site name">elias_dalziel</div>
     <nav class="header-block header-nav" aria-label="Main navigation">
@@ -55,7 +64,7 @@
         </p>
         <div class="card-actions">
           <a href="#" class="btn btn--dark">dsc.gg/ckenetwork</a>
-          <button type="button" class="btn btn--outline" data-copy="dsc.gg/ckenetwork">COPY LINK DISCORD</button>
+          <button type="button" class="btn btn--outline" data-copy="dsc.gg/ckenetwork">COPY DISCORD</button>
         </div>
       </article>
 
